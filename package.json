@@ -23,5 +23,8 @@
   "devDependencies": {
     "@skpm/builder": "^0.7.0"
   },
-  "author": "chewbecca <beckybettinger@yahoo.de>"
+  "author": "chewbecca <beckybettinger@yahoo.de>",
+  "dependencies": {
+    "prettier": "^1.19.1"
+  }
 }
