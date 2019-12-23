@@ -1,9 +1,7 @@
 import * as colorCalc from "./colorCalculations";
 import sketch from "sketch";
-import { colorObjectToRGBString } from "./colorCalculations";
-import { calcTint } from "./colorCalculations";
 
-function createDocumentColors(selectedColor, document, title) {
+export function createSketchAssets(selectedColor, document, title) {
   let steps = colorCalc.generateSteps(selectedColor);
   let colorGroup = new sketch.Group();
 
@@ -55,7 +53,7 @@ function createDocumentColors(selectedColor, document, title) {
   }
 
   addToDocumentColors(colorGroup, document);
-  addToSharedStyles(colorGroup,document);
+  addToSharedStyles(colorGroup, document);
 }
 
 function addToSharedStyles(group, document) {
@@ -67,11 +65,11 @@ function addToSharedStyles(group, document) {
   });
 }
 
-function addToDocumentColors(group,document) {
-    group.layers.map(layer => {
-        document.colors.push({
-            name: layer.name,
-            style: layer.style.fills[0].color
-        });
+function addToDocumentColors(group, document) {
+  group.layers.map(layer => {
+    document.colors.push({
+      name: layer.name,
+      style: layer.style.fills[0].color
     });
+  });
 }
