@@ -1,0 +1,17 @@
+{
+  "$schema": "https://raw.githubusercontent.com/BohemianCoding/SketchAPI/develop/docs/sketch-plugin-manifest-schema.json",
+  "icon": "icon.png",
+  "commands": [
+    {
+      "name": "Create From Layer",
+      "identifier": "tinty.my-command-identifier",
+      "script": "./my-command.js"
+    }
+  ],
+  "menu": {
+    "title": "Tinty",
+    "items": [
+      "tinty.my-command-identifier"
+    ]
+  }
+}
