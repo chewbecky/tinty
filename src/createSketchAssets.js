@@ -3,18 +3,29 @@ import sketch from "sketch";
 
 export function createSketchAssets(selectedColor, document, title) {
   let steps = colorCalc.generateSteps(selectedColor);
-  let colorGroup = new sketch.Group();
+  let colorPage = getOrCreatePage("Colors", document);
+  let colorArtboard = new sketch.Artboard({
+    name: "Colors",
+    parent: colorPage
+  });
+
+  let colorGroup = new sketch.Group({
+    name: "Colors",
+    parent: colorArtboard
+  });
+
+  let positionX = 0;
+
 
   for (let j = 10; j > steps; j--) {
     colorGroup.layers.push(
       new sketch.Shape({
         name: title + " " + j,
+        frame: { x: (positionX+=120), y: 0, width: 100, height: 100 },
         style: {
           fills: [
             {
-              color: colorCalc.colorObjectToRGBString(
-                colorCalc.calcTint(selectedColor, steps, j)
-              )
+              color: colorCalc.calcTint(selectedColor, steps, j)
             }
           ]
         }
@@ -25,10 +36,11 @@ export function createSketchAssets(selectedColor, document, title) {
   colorGroup.layers.push(
     new sketch.Shape({
       name: title + " Primary",
+      frame: { x: (positionX+=120), y: 0, width: 100, height: 100 },
       style: {
         fills: [
           {
-            color: selectedColor
+            color: colorCalc.colorObjectToRGBString(selectedColor)
           }
         ]
       }
@@ -38,22 +50,26 @@ export function createSketchAssets(selectedColor, document, title) {
   for (let i = steps; i >= 0; i--) {
     colorGroup.layers.push(
       new sketch.Shape({
-        name: title + " " + j,
+        name: title + " " + i,
         style: {
           fills: [
             {
-              color: colorCalc.colorObjectToRGBString(
-                colorCalc.calcShades(selectedColor, steps, j)
-              )
+              color: colorCalc.calcShade(selectedColor, steps, i)
             }
           ]
-        }
+        },
+        frame: { x: (positionX+=120), y: 0, width: 100, height: 100 }
       })
     );
   }
 
-  addToDocumentColors(colorGroup, document);
+  colorGroup.adjustToFit();
+  colorArtboard.adjustToFit();
+
+  //addToDocumentColors(colorGroup, document);
   addToSharedStyles(colorGroup, document);
+
+  document.selectedPage = colorPage;
 }
 
 function addToSharedStyles(group, document) {
@@ -71,5 +87,12 @@ function addToDocumentColors(group, document) {
       name: layer.name,
       style: layer.style.fills[0].color
     });
+  });
+}
+
+function getOrCreatePage(pagename, document) {
+  return new sketch.Page({
+    name: pagename,
+    parent: document
   });
 }

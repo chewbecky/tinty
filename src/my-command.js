@@ -1,10 +1,10 @@
 import sketch from "sketch";
-import createSketchAssets from "./createSketchAssets"
+import { createSketchAssets } from "./createSketchAssets";
 import * as colorCalc from "./colorCalculations";
 // documentation: https://developer.sketchapp.com/reference/api/
 
 const document = sketch.getSelectedDocument();
-let selectedColor = undefined;
+let selectedColor = {};
 
 export default function(context) {
   let selection = document.selectedLayers;
@@ -21,9 +21,9 @@ export default function(context) {
         "Please select exactly one Layer with a color fill to caluclate tints and shades of this color"
       );
     } else {
-      if (selection.layers[0].style && selection.layers.style.fills[0].enabled){
+      if (selection.layers[0].style){
         selectedColor = colorCalc.sketchHexToColorObject(selection.layers[0].style.fills[0].color);
-        sketch.UI.getUserInput(
+        sketch.UI.getInputFromUser(
             "Please specifiy the name of your Colors",
             {
               initialValue: "Primary Color"
@@ -34,7 +34,7 @@ export default function(context) {
                 return
               }
               if (value) {
-                createSketchAssets(selectedColor, document, value)
+                createSketchAssets(selectedColor, document, value);
               }
             }
         )

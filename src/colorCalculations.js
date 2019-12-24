@@ -1,34 +1,37 @@
 export function generateSteps(colorValue) {
   let baseRelLuminance = Math.round(calcRelativeLuminance(colorValue) * 10);
-  console.log(baseRelLuminance);
   return baseRelLuminance;
 }
 
 export function calcShade(colorValue, factor, step) {
-  let newRGB = {};
+  let newShade = {};
 
-  newRGB.r = Math.floor((colorValue.r / factor) * step);
-  newRGB.g = Math.floor((colorValue.g / factor) * step);
-  newRGB.b = Math.floor((colorValue.b / factor) * step);
+  newShade.r = Math.floor(colorValue.r * (step / factor));
+  newShade.g = Math.floor(colorValue.g * (step / factor));
+  newShade.b = Math.floor(colorValue.b * (step / factor));
 
-  return newRGB;
+  return colorObjectToRGBString(newShade);
 }
 
 export function calcTint(colorValue, factor, step) {
-  let newRGB = {};
+  let newTint = {};
 
-  newRGB.r = Math.floor(((255 - colorValue.r) * factor) / step + colorValue.r);
-  newRGB.g = Math.floor(((255 - colorValue.g) * factor) / step + colorValue.g);
-  newRGB.b = Math.floor(((255 - colorValue.b) * factor) / step + colorValue.b);
-  return newRGB;
+  newTint.r = Math.floor(((255 - colorValue.r) * factor) / step + colorValue.r);
+  newTint.g = Math.floor(((255 - colorValue.g) * factor) / step + colorValue.g);
+  newTint.b = Math.floor(((255 - colorValue.b) * factor) / step + colorValue.b);
+
+  return colorObjectToRGBString(newTint);
 }
 
 function calcRelativeLuminance(colorValue) {
-  colorValue.r = normalizeValue(colorValue.r) * 0.2126;
-  colorValue.g = normalizeValue(colorValue.g) * 0.7152;
-  colorValue.b = normalizeValue(colorValue.b) * 0.0722;
+  let luminanceRGB = {};
 
-  return colorValue.r + colorValue.g + colorValue.b;
+  luminanceRGB.r = normalizeValue(colorValue.r) * 0.2126;
+  luminanceRGB.g = normalizeValue(colorValue.g) * 0.7152;
+  luminanceRGB.b = normalizeValue(colorValue.b) * 0.0722;
+
+
+  return luminanceRGB.r + luminanceRGB.g + luminanceRGB.b;
 }
 
 function normalizeValue(singleColorValue) {
@@ -50,10 +53,13 @@ export function colorObjectToRGBString(colorObject) {
 export function sketchHexToColorObject(sketchHex) {
   let colorObject = {};
 
-  colorObject.r = parseInt(sketchHex.slice(1,2), "16");
-  colorObject.g = parseInt(sketchHex.slice(3,4), "16");
-  colorObject.b = parseInt(sketchHex.slice(5,6), "16");
+  colorObject.r = parseInt(sketchHex.slice(1, 3), "16");
+  colorObject.g = parseInt(sketchHex.slice(3, 5), "16");
+  colorObject.b = parseInt(sketchHex.slice(5, 7), "16");
 
+  console.log(sketchHex);
+  console.log(colorObject);
+  return colorObject;
 }
 
 export function colorObjectToSketchHex(colorObject) {
@@ -61,6 +67,7 @@ export function colorObjectToSketchHex(colorObject) {
     "#" +
     colorObject.r.toString(16) +
     colorObject.r.toString(16) +
-    colorObject.b.toString(16)
+    colorObject.b.toString(16) +
+    "ff"
   );
 }
