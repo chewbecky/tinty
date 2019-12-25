@@ -1,6 +1,8 @@
 import * as colorCalc from "./colorCalculations";
 import sketch from "sketch";
 
+
+
 export function createSketchAssets(selectedColor, document, title) {
   let steps = colorCalc.generateSteps(selectedColor);
   let colorPage = getOrCreatePage("Colors", document);
@@ -119,13 +121,19 @@ function overrideDocumentColors(group, document, title) {
 function overrideSharedStyles(group, document, title) {
   document.sharedLayerStyles.map(sharedLayerStyle => {
     if (sharedLayerStyle.name.includes(title)) {
-      console.log(sharedLayerStyle);
-      let layer = sketch.find('[name="'+ sharedLayerStyle.name + '"]', group);
+      let layer = sketch.find('[name="'+ sharedLayerStyle.name + '"]', group)[0];
       console.log(layer);
+      console.log(sharedLayerStyle);
       sharedLayerStyle.style = layer.style;
       layer.sharedStyle = sharedLayerStyle;
-      console.log(sharedLayerStyle);
-      console.log(layer);
+      syncAllSharedStyles(sharedLayerStyle);
     }
+  });
+}
+
+function syncAllSharedStyles(sharedStyle) {
+  let styleInstances = sharedStyle.getAllInstances();
+  styleInstances.map(style => {
+    style.syncWithSharedStyle(sharedStyle);
   });
 }
