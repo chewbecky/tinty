@@ -5,7 +5,7 @@ export function createSketchAssets(selectedColor, document, title) {
   let steps = colorCalc.generateSteps(selectedColor);
   let colorPage = getOrCreatePage("Colors", document);
   let colorArtboard = new sketch.Artboard({
-    name: "Colors",
+    name: title,
     parent: colorPage
   });
 
@@ -16,12 +16,11 @@ export function createSketchAssets(selectedColor, document, title) {
 
   let positionX = 0;
 
-
   for (let j = 10; j > steps; j--) {
     colorGroup.layers.push(
       new sketch.Shape({
         name: title + " " + j,
-        frame: { x: (positionX+=120), y: 0, width: 100, height: 100 },
+        frame: { x: (positionX += 120), y: 0, width: 100, height: 100 },
         style: {
           fills: [
             {
@@ -36,7 +35,7 @@ export function createSketchAssets(selectedColor, document, title) {
   colorGroup.layers.push(
     new sketch.Shape({
       name: title + " Primary",
-      frame: { x: (positionX+=120), y: 0, width: 100, height: 100 },
+      frame: { x: (positionX += 120), y: 0, width: 100, height: 100 },
       style: {
         fills: [
           {
@@ -58,7 +57,7 @@ export function createSketchAssets(selectedColor, document, title) {
             }
           ]
         },
-        frame: { x: (positionX+=120), y: 0, width: 100, height: 100 }
+        frame: { x: (positionX += 120), y: 0, width: 100, height: 100 }
       })
     );
   }
@@ -66,17 +65,27 @@ export function createSketchAssets(selectedColor, document, title) {
   colorGroup.adjustToFit();
   colorArtboard.adjustToFit();
 
-  //addToDocumentColors(colorGroup, document);
-  addToSharedStyles(colorGroup, document);
+  if (
+    colorPage.layers.filter(layer => {
+      return layer.name === title;
+    }).length === 1
+  ) {
+    addToDocumentColors(colorGroup, document);
+    addToSharedStyles(colorGroup, document);
+  } else {
+    overrideDocumentColors(colorGroup, document, title);
+    overrideSharedStyles(colorGroup, document, title);
+  }
 
   document.selectedPage = colorPage;
 }
 
 function addToSharedStyles(group, document) {
   group.layers.map(layer => {
-    document.sharedLayerStyles.push({
+    layer.sharedStyle = sketch.SharedStyle.fromStyle({
       name: layer.name,
-      style: layer.style
+      style: layer.style,
+      document: document
     });
   });
 }
@@ -85,14 +94,38 @@ function addToDocumentColors(group, document) {
   group.layers.map(layer => {
     document.colors.push({
       name: layer.name,
-      style: layer.style.fills[0].color
+      color: layer.style.fills[0].color
     });
   });
 }
 
 function getOrCreatePage(pagename, document) {
-  return new sketch.Page({
-    name: pagename,
-    parent: document
+  let page = sketch.find('Page, [name="Colors"]');
+  if (page.length === 0) {
+    return new sketch.Page({
+      name: pagename,
+      parent: document
+    });
+  } else {
+    return page[0];
+  }
+}
+
+function overrideDocumentColors(group, document, title) {
+  document.colors = document.colors.filter(colorAsset => {return !colorAsset.name.includes(title)});
+  addToDocumentColors(group, document);
+}
+
+function overrideSharedStyles(group, document, title) {
+  document.sharedLayerStyles.map(sharedLayerStyle => {
+    if (sharedLayerStyle.name.includes(title)) {
+      console.log(sharedLayerStyle);
+      let layer = sketch.find('[name="'+ sharedLayerStyle.name + '"]', group);
+      console.log(layer);
+      sharedLayerStyle.style = layer.style;
+      layer.sharedStyle = sharedLayerStyle;
+      console.log(sharedLayerStyle);
+      console.log(layer);
+    }
   });
 }
