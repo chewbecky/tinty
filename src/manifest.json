@@ -5,6 +5,7 @@
     {
       "name": "Create From Layer",
       "identifier": "tinty.my-command-identifier",
+      "shortcut": "ctrl t",
       "script": "./my-command.js"
     }
   ],
