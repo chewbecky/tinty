@@ -4,11 +4,17 @@ import sketch from "sketch";
 
 
 export function createSketchAssets(selectedColor, document, title) {
-  let steps = colorCalc.generateSteps(selectedColor);
+  const numOfNuances = 10;
+  const nuanceOfPrimary = colorCalc.generateSteps(selectedColor);
+  const numOfTints = numOfNuances-nuanceOfPrimary-1;
+  const numOfShades = nuanceOfPrimary+1;
+  let positionX = 0;
+  let nuanceNamingCounter = 1;
   let colorPage = getOrCreatePage("Colors", document);
   let colorArtboard = new sketch.Artboard({
     name: title,
-    parent: colorPage
+    parent: colorPage,
+    frame: { x: 0, y: colorPage.layers.length*200, width: 0, height: 0 },
   });
 
   let colorGroup = new sketch.Group({
@@ -16,17 +22,32 @@ export function createSketchAssets(selectedColor, document, title) {
     parent: colorArtboard
   });
 
-  let positionX = 0;
 
-  for (let j = 10; j > steps; j--) {
-    colorGroup.layers.push(
+  console.log(numOfNuances, nuanceOfPrimary);
+
+  colorGroup.layers.push(
       new sketch.Shape({
-        name: title + " " + j,
+        name: title,
         frame: { x: (positionX += 120), y: 0, width: 100, height: 100 },
         style: {
           fills: [
             {
-              color: colorCalc.calcTint(selectedColor, steps, j)
+              color: colorCalc.colorObjectToRGBString(selectedColor)
+            }
+          ]
+        }
+      })
+  );
+
+  for (let j = numOfTints; j > 0; j--) {
+    colorGroup.layers.push(
+      new sketch.Shape({
+        name: title + " " + nuanceNamingCounter++,
+        frame: { x: (positionX += 120), y: 0, width: 100, height: 100 },
+        style: {
+          fills: [
+            {
+              color: colorCalc.calcTintsAndShades(selectedColor, numOfTints, j, true)
             }
           ]
         }
@@ -36,7 +57,7 @@ export function createSketchAssets(selectedColor, document, title) {
 
   colorGroup.layers.push(
     new sketch.Shape({
-      name: title + " Primary",
+      name: title + " " + nuanceNamingCounter++,
       frame: { x: (positionX += 120), y: 0, width: 100, height: 100 },
       style: {
         fills: [
@@ -48,14 +69,14 @@ export function createSketchAssets(selectedColor, document, title) {
     })
   );
 
-  for (let i = steps; i >= 0; i--) {
+  for (let i = numOfShades; i > 0; i--) {
     colorGroup.layers.push(
       new sketch.Shape({
-        name: title + " " + i,
+        name: title + " " + nuanceNamingCounter++,
         style: {
           fills: [
             {
-              color: colorCalc.calcShade(selectedColor, steps, i)
+              color: colorCalc.calcTintsAndShades(selectedColor, numOfShades, i, false)
             }
           ]
         },
