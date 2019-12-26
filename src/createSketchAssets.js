@@ -1,20 +1,19 @@
 import * as colorCalc from "./colorCalculations";
 import sketch from "sketch";
 
-
-
 export function createSketchAssets(selectedColor, document, title) {
-  const numOfNuances = 10;
-  const nuanceOfPrimary = colorCalc.generateSteps(selectedColor);
-  const numOfTints = numOfNuances-nuanceOfPrimary-1;
-  const numOfShades = nuanceOfPrimary+1;
+  const numOfNuances = 6;
+  const nuanceOfPrimary = colorCalc.generateSteps(selectedColor, numOfNuances);
+  const numOfTints = numOfNuances - nuanceOfPrimary;
+  const numOfShades = nuanceOfPrimary + 1;
+  console.log(title, numOfNuances, nuanceOfPrimary, numOfTints, numOfShades);
   let positionX = 0;
   let nuanceNamingCounter = 1;
   let colorPage = getOrCreatePage("Colors", document);
   let colorArtboard = new sketch.Artboard({
     name: title,
     parent: colorPage,
-    frame: { x: 0, y: colorPage.layers.length*200, width: 0, height: 0 },
+    frame: { x: 0, y: colorPage.layers.length * 200, width: 0, height: 0 }
   });
 
   let colorGroup = new sketch.Group({
@@ -22,24 +21,21 @@ export function createSketchAssets(selectedColor, document, title) {
     parent: colorArtboard
   });
 
-
-  console.log(numOfNuances, nuanceOfPrimary);
-
   colorGroup.layers.push(
-      new sketch.Shape({
-        name: title,
-        frame: { x: (positionX += 120), y: 0, width: 100, height: 100 },
-        style: {
-          fills: [
-            {
-              color: colorCalc.colorObjectToRGBString(selectedColor)
-            }
-          ]
-        }
-      })
+    new sketch.Shape({
+      name: title,
+      frame: { x: (positionX += 120), y: 0, width: 100, height: 100 },
+      style: {
+        fills: [
+          {
+            color: colorCalc.colorObjectToRGBString(selectedColor)
+          }
+        ]
+      }
+    })
   );
 
-  for (let j = numOfTints; j > 0; j--) {
+  for (let j = numOfNuances - 1; j >= nuanceOfPrimary; j--) {
     colorGroup.layers.push(
       new sketch.Shape({
         name: title + " " + nuanceNamingCounter++,
@@ -47,14 +43,18 @@ export function createSketchAssets(selectedColor, document, title) {
         style: {
           fills: [
             {
-              color: colorCalc.calcTintsAndShades(selectedColor, numOfTints, j, true)
+              color: colorCalc.calcTintsAndShades(
+                selectedColor,
+                numOfNuances,
+                j,
+                true
+              )
             }
           ]
         }
       })
     );
   }
-
   colorGroup.layers.push(
     new sketch.Shape({
       name: title + " " + nuanceNamingCounter++,
@@ -69,14 +69,19 @@ export function createSketchAssets(selectedColor, document, title) {
     })
   );
 
-  for (let i = numOfShades; i > 0; i--) {
+  for (let i = numOfShades - 1; i >= 0; i--) {
     colorGroup.layers.push(
       new sketch.Shape({
         name: title + " " + nuanceNamingCounter++,
         style: {
           fills: [
             {
-              color: colorCalc.calcTintsAndShades(selectedColor, numOfShades, i, false)
+              color: colorCalc.calcTintsAndShades(
+                selectedColor,
+                numOfShades,
+                i,
+                false
+              )
             }
           ]
         },
@@ -135,16 +140,19 @@ function getOrCreatePage(pagename, document) {
 }
 
 function overrideDocumentColors(group, document, title) {
-  document.colors = document.colors.filter(colorAsset => {return !colorAsset.name.includes(title)});
+  document.colors = document.colors.filter(colorAsset => {
+    return !colorAsset.name.includes(title);
+  });
   addToDocumentColors(group, document);
 }
 
 function overrideSharedStyles(group, document, title) {
   document.sharedLayerStyles.map(sharedLayerStyle => {
     if (sharedLayerStyle.name.includes(title)) {
-      let layer = sketch.find('[name="'+ sharedLayerStyle.name + '"]', group)[0];
-      console.log(layer);
-      console.log(sharedLayerStyle);
+      let layer = sketch.find(
+        '[name="' + sharedLayerStyle.name + '"]',
+        group
+      )[0];
       sharedLayerStyle.style = layer.style;
       layer.sharedStyle = sharedLayerStyle;
       syncAllSharedStyles(sharedLayerStyle);

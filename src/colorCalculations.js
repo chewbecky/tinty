@@ -1,10 +1,11 @@
-export function generateSteps(colorValue) {
-  return Math.round(calcRelativeLuminance(colorValue) * 10);
+export function generateSteps(colorValue, numOfNuances) {
+  console.log(calcRelativeLuminance(colorValue), numOfNuances, alternativeBrightnessCalculator(colorValue));
+  return Math.floor(alternativeBrightnessCalculator(colorValue)*numOfNuances);
 }
 
 export function calcTintsAndShades(colorValue, steps, step, isTint) {
   let newShade = {};
-  let factor = step === 0 ? 0.1 : step === steps ? 0.9 : step/steps;
+  let factor = step === 0 ? 0.1 : step === steps ? 0.9 : step / steps;
 
   newShade.r = isTint
     ? calcSingleTintValue(colorValue.r, factor)
@@ -15,8 +16,6 @@ export function calcTintsAndShades(colorValue, steps, step, isTint) {
   newShade.b = isTint
     ? calcSingleTintValue(colorValue.b, factor)
     : calcSingleShadeValue(colorValue.b, factor);
-
-  console.log(steps, step, factor, isTint, newShade);
 
   return colorObjectToRGBString(newShade);
 }
@@ -68,11 +67,16 @@ export function colorObjectToSketchHex(colorObject) {
 }
 
 function calcSingleTintValue(singeColorValue, factor) {
-  return Math.floor(
-    (255 - singeColorValue) *factor + singeColorValue
-  );
+  return Math.floor((255 - singeColorValue) * factor + singeColorValue);
 }
 
 function calcSingleShadeValue(singleColorValue, factor) {
   return Math.floor(singleColorValue * factor);
+}
+
+function alternativeBrightnessCalculator (colorValue) {
+  return Math.sqrt(
+      colorValue.r * colorValue.r * .241 +
+      colorValue.g * colorValue.g * .691 +
+      colorValue.b * colorValue.b * .068)/255;
 }
