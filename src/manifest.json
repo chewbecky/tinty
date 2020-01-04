@@ -4,15 +4,21 @@
   "commands": [
     {
       "name": "Create From Layer",
-      "identifier": "tinty.my-command-identifier",
+      "identifier": "tinty.create-from-layer",
       "shortcut": "ctrl t",
-      "script": "./my-command.js"
+      "script": "./create-from-layer.js"
+    },
+    {
+      "name": "Create Tints and Shades ...",
+      "identifier": "tinty.create-tints-and-shades",
+      "script": "./create-tints-and-shades.js"
     }
   ],
   "menu": {
     "title": "Tinty",
     "items": [
-      "tinty.my-command-identifier"
+      "tinty.create-from-layer",
+      "tinty.create-tints-and-shades"
     ]
   }
 }

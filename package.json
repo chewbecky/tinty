@@ -21,10 +21,20 @@
     "postinstall": "npm run build && skpm-link"
   },
   "devDependencies": {
-    "@skpm/builder": "^0.7.0"
+    "@skpm/builder": "^0.7.4",
+    "@skpm/extract-loader": "^2.0.2",
+    "css-loader": "^3.2.0",
+    "html-loader": "^0.5.5"
   },
-  "author": "chewbecca <beckybettinger@yahoo.de>",
+  "resources": [
+    "resources/**/*.js"
+  ],
+  "author": "chewbecca",
   "dependencies": {
-    "prettier": "^1.19.1"
+    "css-loader": "^3.4.1",
+    "extract-loader": "^3.1.0",
+    "html-loader": "^0.5.5",
+    "prettier": "^1.19.1",
+    "sketch-module-web-view": "^3.4.1"
   }
 }
