@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>hallo welt</title>
+    <style>
+      body,
+      html {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        background-color: azure;
+      }
+      div {
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <img src="./webviewImages.png" alt="Smiley face" height="42" width="42" />
+    <form>
+      <fieldset>
+        <legend>Create Tints and Shades</legend>
+        <p>
+          <input
+            type="color"
+            name="color_value"
+            id="color_value"
+            value="#ff0000"
+          />
+          <label for="color_value">Pick a color</label>
+        </p>
+        <p>
+          <input
+            type="text"
+            name="color_title"
+            id="color_title"
+            value="Primary"
+          />
+          <label for="color_title">Color Name</label>
+        </p>
+        <p>
+          <input
+            type="number"
+            name="num_of_steps"
+            id="num_of_steps"
+            value="6"
+          />
+          <label for="num_of_steps">Number of Tints and Shades</label>
+        </p>
+        <p>
+          <button type="submit">Magic</button>
+        </p>
+      </fieldset>
+    </form>
+  </body>
+</html>
