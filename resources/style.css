@@ -1,0 +1,84 @@
+body {
+  margin: 0;
+  font-family: Helvetica;
+  background-color: white;
+  padding: 40px;
+}
+.header {
+  margin: 0 auto;
+}
+
+button {
+  padding: 12px 24px;
+  background-color: #0700ff;
+  font-size: 18px;
+  color: white;
+  box-shadow: 0 2px 4px #9c99ff;
+  border-radius: 4px;
+  border: none;
+  transition: all 0.3s;
+  box-sizing: border-box;
+  margin: 10px 20px;
+}
+
+button:hover {
+  background-color: #0500b3;
+  box-shadow: 0 2px 8px #9c99ff;
+  border: none;
+}
+
+button:active {
+  background-color: #030066;
+  box-shadow: 0 2px 1px #9c99ff;
+  border: none;
+}
+
+button:focus {
+  background-color: #0700ff;
+  box-shadow: 0 0 8px 4px #0700ff;
+  border: 2px solid white;
+  outline: none;
+}
+
+input {
+  border: 1px solid #73738c;
+  border-radius: 4px;
+  height: 40px;
+  width: 200px;
+  box-sizing: border-box;
+  transition: all 0.3s;
+  padding: 8px;
+  margin: 10px 20px;
+  font-size: 14px;
+  color: #2E2E38;
+}
+
+input:hover {
+  box-shadow: 0 2px 8px #9c99ff;
+}
+
+input:active {
+  box-shadow: 0 2px 4px #9c99ff;
+}
+
+input:focus {
+  box-shadow: 0 0 8px 4px #9c99ff;
+  outline: none;
+}
+
+input[type="color"] {
+  -webkit-appearance: none;
+  border: none;
+  width: 40px;
+  height: 40px;
+}
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+input[type="color"]::-webkit-color-swatch {
+  border: none;
+}
+
+input[type="number"] {
+  width: 60px;
+}
